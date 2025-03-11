@@ -1,0 +1,8 @@
+whisper
+requests
+PyYAML
+ratelimit
+duck_chat
+torch
+torchaudio
+numpy

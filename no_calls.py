@@ -4,7 +4,7 @@ import logging
 import traceback
 import time
 
-limit = 200
+limit = 500
 
 # Настройка логирования
 logging.basicConfig(
