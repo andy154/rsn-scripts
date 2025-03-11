@@ -74,7 +74,7 @@ def get_calls(company):
     logging.info(f"Происходит загрузка звонков компании '{company['name']}' ({company['id']})")
     start_time = time.time()
     response = call_api("https://novomir.pro/amo/rossuvenir/amo/getCompaniesCalls.php?id=" + str(company['id']))
-    if response.status_code == 200:
+    if response:
         json = response.json()
         if not json:
             logging.info("Компания '" + company['name'] + "' не имеет звонков\n")
