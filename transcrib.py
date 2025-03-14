@@ -8,6 +8,8 @@ import logging
 import traceback
 import yaml
 from ratelimit import limits, sleep_and_retry
+import warnings
+warnings.simplefilter("ignore", category=FutureWarning)
 
 # Настройка логирования
 logging.basicConfig(
@@ -65,7 +67,7 @@ def get_companies():
     logging.info("Происходит загрузка компаний...")
     start_time = time.time()
     try:
-        response = call_api(f"https://novomir.pro/amo/rossuvenir/amo/getCompanies.php")
+        response = call_api(f"https://novomir.pro/amo/rossuvenir/amo/getCompanies.php?limit=all")
         if response.status_code == 200:
             json = response.json()
             companys = json['companies']
