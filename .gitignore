@@ -1,0 +1,45 @@
+# Игнорируем виртуальное окружение
+venv/
+env/
+*.pyc
+*.pyo
+__pycache__/
+
+# Логи и временные файлы
+*.log
+logs/
+debug.log
+nohup.out
+
+# Игнорируем аудиофайлы и их транскрипции
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.aac
+*.opus
+*.m4a
+*.wma
+*.txt  # Если транскрипции сохраняются в .txt
+
+# Файлы кэша и модели Whisper
+*.bin
+*.pt
+*.ckpt
+whisper_cache/
+*.onnx
+models/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Игнорируем конфигурационные файлы (если они личные)
+*.json  # если есть файлы конфигурации
+
+# Игнорируем системные файлы macOS и Linux
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.bak
+*.orig
