@@ -130,7 +130,7 @@ def get_text(file_url):
     logging.info("\t\tПроисходит транскрибация звонка...")
     try:
         start_time = time.time()
-        model = whisper.load_model(config["transcrib_model"], device=config["device"], fp16=config["fp16"])
+        model = whisper.load_model(config["transcrib_model"], device=config["device"])
         result = model.transcribe(local_filename, language="ru", fp16=config["fp16"]).get("text")
         
         os.remove(local_filename)  # Удаляем временный файл после обработки
