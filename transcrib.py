@@ -136,15 +136,8 @@ def get_text(file_url):
     logging.info("\t\tПроисходит транскрибация звонка...")
     try:
         start_time = time.time()
-
-        # Транскрибация
+        
         result = model.transcribe(local_filename, language="ru", fp16=config["fp16"]).get("text")
-
-        # audio = whisper.load_audio(local_filename)
-        # mel = whisper.log_mel_spectrogram(audio).to(model.device)
-        # with torch.no_grad():
-        #     encoded_audio = model.encode(mel, batch_size=config["batch_size"])
-        # result = whisper.decode(model, encoded_audio).text
 
         os.remove(local_filename)  # Удаляем временный файл после обработки
 

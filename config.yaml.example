@@ -85,4 +85,3 @@ company_counts_limit: 1
 transcrib_model: medium
 fp16: false
 device: cpu
-batch_size: 16
