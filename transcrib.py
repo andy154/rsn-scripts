@@ -73,7 +73,7 @@ def get_companies():
     logging.info("Происходит загрузка компаний...")
     start_time = time.time()
     try:
-        response = call_api(f"https://novomir.pro/amo/rossuvenir/amo/getCompanies.php")
+        response = call_api(f"https://novomir.pro/amo/rossuvenir/amo/getCompanies.php?limit={config['limit']}")
         if response.status_code == 200:
             json = response.json()
             companys = json['companies']
