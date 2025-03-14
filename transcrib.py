@@ -151,8 +151,7 @@ def get_text(file_url):
         return result
     except Exception as e:
         error = f"Произошла ошибка при транскрибации: {e}"
-        logging.error(f"\t\t{error}\nTraceback: {traceback.format_exc()}")
-        send_tg_message(error)
+        logging.error(f"\t\t{error}\n")
 
 async def get_answer(text):
     global calls_handler_duration
