@@ -285,12 +285,14 @@ def main():
                     result = "Есть интерес"
                     break
                 elif call_result == "НЕТ":
-                    result = "Нет интереса"
-                
+                    result = "Нет интереса"     
         else:
             result = "Нет звонков"
 
-        if (result): set_company_result(company, result)
+        if (result): 
+            set_company_result(company, result)
+        else:
+            logging.info(f"Результат обработки компании '{company['name']}' ({company['id']}) не изменен\n")
 
         logging.info("Всего времени на обработку компании: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
 
