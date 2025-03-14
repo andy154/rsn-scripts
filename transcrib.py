@@ -45,6 +45,8 @@ with open("config.yaml", "r") as file:
 prompt = config["prompt"]
 response_prompt = '\nДАЙ ОТВЕТ ОПРЕДЕЛЕННО ТОЛЬКО "ДА" или "НЕТ", НИКАКИХ ОБЪЯСНЕНИЙ!!! ТОЛЬКО "ДА" ИЛИ "НЕТ"!!!'
 
+model = whisper.load_model(config["transcrib_model"], device=config["device"])
+
 @sleep_and_retry
 @limits(calls=7, period=1)
 def call_api(url):
@@ -130,7 +132,6 @@ def get_text(file_url):
     logging.info("\t\tПроисходит транскрибация звонка...")
     try:
         start_time = time.time()
-        model = whisper.load_model(config["transcrib_model"], device=config["device"])
         result = model.transcribe(local_filename, language="ru", fp16=config["fp16"]).get("text")
         
         os.remove(local_filename)  # Удаляем временный файл после обработки
