@@ -250,8 +250,10 @@ def print_stats():
     logging.info(f"Среднее время обработки 1 компании: {(script_duration/companys_count).__round__()} сек.")
     logging.info(f"Среднее время обработки 1 звонка: {(script_duration/calls_count_handled).__round__()} сек.")
     logging.info(f"Среднее время обработки 1 сек. записи: {(script_duration/calls_duration_handled).__round__(2)} сек.\n")
-    logging.info(f"Коэффициент скорости обработки звонков: {(calls_duration_handled/script_duration).__round__(2)}")
 
+    logging.info(f"Коэффициент скорости обработки звонков(общее время): {(calls_duration_handled/script_duration).__round__(2)}")
+    logging.info(f"Коэффициент скорости обработки звонков(транскрибация): {(calls_duration_handled/transcrib_duration).__round__(2)}")
+    
 def main():
     global companys_count
     global calls_count
