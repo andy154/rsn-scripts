@@ -1,10 +1,12 @@
 import whisper
+import torch
 import asyncio
 import time
 import os
 import requests
 from duck_chat import DuckChat
 import logging
+import os
 import traceback
 import yaml
 from ratelimit import limits, sleep_and_retry
@@ -12,11 +14,12 @@ import warnings
 warnings.simplefilter("ignore", category=FutureWarning)
 
 # Настройка логирования
+logging_file = os.path.join("logs", f"{time.time()}.log")
 logging.basicConfig(
     level=logging.INFO,  # Уровень логов
     format="%(asctime)s [%(levelname)s] %(message)s",  # Формат сообщений
     handlers=[
-        logging.FileHandler(f"{time.time()}.log", encoding="utf-8"),  # Логи в файл
+        logging.FileHandler(logging_file, encoding="utf-8"),  # Логи в файл
         logging.StreamHandler()  # Логи в консоль
     ]
 )
@@ -45,6 +48,7 @@ with open("config.yaml", "r") as file:
 prompt = config["prompt"]
 response_prompt = '\nДАЙ ОТВЕТ ОПРЕДЕЛЕННО ТОЛЬКО "ДА" или "НЕТ", НИКАКИХ ОБЪЯСНЕНИЙ!!! ТОЛЬКО "ДА" ИЛИ "НЕТ"!!!'
 
+logging.info("Загрузка whisper...")
 model = whisper.load_model(config["transcrib_model"], device=config["device"])
 
 @sleep_and_retry
@@ -132,8 +136,16 @@ def get_text(file_url):
     logging.info("\t\tПроисходит транскрибация звонка...")
     try:
         start_time = time.time()
+
+        # Транскрибация
         result = model.transcribe(local_filename, language="ru", fp16=config["fp16"]).get("text")
-        
+
+        # audio = whisper.load_audio(local_filename)
+        # mel = whisper.log_mel_spectrogram(audio).to(model.device)
+        # with torch.no_grad():
+        #     encoded_audio = model.encode(mel, batch_size=config["batch_size"])
+        # result = whisper.decode(model, encoded_audio).text
+
         os.remove(local_filename)  # Удаляем временный файл после обработки
 
         end_time = time.time()
