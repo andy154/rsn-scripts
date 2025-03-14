@@ -136,7 +136,7 @@ def get_text(file_url):
     logging.info("\t\tПроисходит транскрибация звонка...")
     try:
         start_time = time.time()
-        
+
         result = model.transcribe(local_filename, language="ru", fp16=config["fp16"]).get("text")
 
         os.remove(local_filename)  # Удаляем временный файл после обработки
@@ -174,13 +174,12 @@ async def get_answer(text):
             logging.info("\t\tРЕЗУЛЬТАТ: " + str(response))
             logging.info("\t\tВремя обработки ИИ: " + str(duration.__round__(2)) + " сек.\n")
 
-
             return response
     except Exception as e:
         error = f"Произошла ошибка при обработке ИИ: {e}"
         logging.error(f"\t\t{error}\n")
-        send_tg_message(error)     
-
+        send_tg_message(error)
+        return None
 
 def call_handler(call):
     global calls_duration
@@ -275,7 +274,7 @@ def main():
         start_time = time.time()
 
         calls = get_calls(company)
-        result = "Не проверяли"
+        result = None
 
         if calls:
             for call in calls:
@@ -287,12 +286,12 @@ def main():
                     break
                 elif call_result == "НЕТ":
                     result = "Нет интереса"
-                elif call_result == -1:
-                    result = "Нет звонков"
+                
         else:
             result = "Нет звонков"
 
-        set_company_result(company, result)
+        if (result): set_company_result(company, result)
+
         logging.info("Всего времени на обработку компании: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
 
     print_stats()
