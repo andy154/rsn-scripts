@@ -4,7 +4,7 @@ import logging
 import traceback
 import time
 
-limit = 500
+limit = 'all'
 
 # Настройка логирования
 logging.basicConfig(
@@ -23,7 +23,7 @@ def send_tg_message(text):
 @limits(calls=7, period=1)
 def call_api(url):
     try:
-        response = requests.get(url, timeout=10)  # Добавляем таймаут в 10 секунд
+        response = requests.get(url, timeout=60)  # Добавляем таймаут в 10 секунд
         return response
     except requests.exceptions.Timeout:
         logging.error(f"Таймаут запроса: {url}")

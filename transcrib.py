@@ -14,7 +14,7 @@ import warnings
 warnings.simplefilter("ignore", category=FutureWarning)
 
 # Настройка логирования
-logging_file = os.path.join("logs", f"{time.strftime("%Y-%m-%d_%H-%M", time.localtime())}.log")
+logging_file = os.path.join("logs", f"{time.strftime('%Y-%m-%d_%H-%M', time.localtime())}.log")
 logging.basicConfig(
     level=logging.INFO,  # Уровень логов
     format="%(asctime)s [%(levelname)s] %(message)s",  # Формат сообщений
