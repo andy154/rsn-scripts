@@ -43,3 +43,5 @@ models/
 *.swn
 *.bak
 *.orig
+
+.yaml
