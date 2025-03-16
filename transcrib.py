@@ -175,7 +175,7 @@ async def get_answer(text):
 
             return response
     except Exception as e:
-        error = f"Произошла ошибка при обработке ИИ: {e}"
+        error = f"Произошла ошибка при обработке ИИ(кол-во символов в запросе = {len(text)}): {e}"
         logging.error(f"\t\t{error}\n")
         send_tg_message(error)
         return None
