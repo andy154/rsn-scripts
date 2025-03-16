@@ -203,6 +203,9 @@ def call_handler(call):
         return "ДА"
     elif call[1]['link']:    
         text = get_text(call[1]['link'])
+        if not text:
+            logging.info("\t\tПроизошла ошибка при транскрибации звонка\n")
+            return -1
         result = asyncio.run(get_answer(text))
 
         logging.info("\t\tВсего времени на обработку звонка: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
