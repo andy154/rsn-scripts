@@ -192,8 +192,8 @@ def call_handler(call):
     global calls_count_no_results
 
     start_time = time.time()
-    duration = call[1]['duration']
-    calls_duration += int(duration)
+    duration = int(call[1]['duration'])
+    calls_duration += duration
     
     logging.info("\tОбработка звонка")
     logging.info("\tДлительность: " + str(duration) + " сек.")
@@ -280,7 +280,7 @@ def main():
 
         calls = get_calls(company)
         result = None
-        no_calls = False
+        no_calls = None
 
         if calls != None:
             if (len(calls) == 0):
