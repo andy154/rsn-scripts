@@ -205,7 +205,7 @@ def call_handler(call):
         text = get_text(call[1]['link'])
         if not text:
             logging.info("\t\tПроизошла ошибка при транскрибации звонка\n")
-            return -1
+            return
         result = asyncio.run(get_answer(text))
 
         logging.info("\t\tВсего времени на обработку звонка: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
@@ -277,6 +277,7 @@ def main():
 
         calls = get_calls(company)
         result = None
+        no_calls = False
 
         if calls:
             for call in calls:
@@ -287,12 +288,16 @@ def main():
                     result = "Есть интерес"
                     break
                 elif call_result == "НЕТ":
-                    result = "Нет интереса"     
+                    result = "Нет интереса"
+                elif call_result == -1:
+                    no_calls = True
         else:
             result = "Нет звонков"
 
-        if (result): 
+        if result: 
             set_company_result(company, result)
+        elif no_calls:
+            set_company_result(company, "Нет звонков")
         else:
             logging.info(f"Результат обработки компании '{company['name']}' ({company['id']}) не изменен\n")
 
