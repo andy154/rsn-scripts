@@ -93,20 +93,23 @@ def get_calls(company):
     logging.info(f"Происходит загрузка звонков компании '{company['name']}' ({company['id']})")
     start_time = time.time()
     response = call_api("https://novomir.pro/amo/rossuvenir/amo/getCompaniesCalls.php?id=" + str(company['id']))
-    if response.status_code == 200:
-        json = response.json()
-        if not json:
-            logging.info("Компания '" + company['name'] + "' не имеет звонков\n")
-            return
+    if response:
+        if response.status_code == 200:
+            json = response.json()
+            if not json:
+                logging.info("Компания '" + company['name'] + "' не имеет звонков\n")
+                return []
 
-        logging.info("Количество звонков: " + str(len(json)))
-        logging.info("Время загрузки: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
-        return json.items()
+            logging.info("Количество звонков: " + str(len(json)))
+            logging.info("Время загрузки: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
+            return json.items()
+        else:
+            error = f"\t\tПроизошла ошибка при загрузке звонков: {e}"
+            logging.error(f"{error}\nTraceback: {traceback.format_exc()}")
+            send_tg_message(error)
     else:
-        error = f"\t\tПроизошла ошибка при загрузке звонков: {e}"
-        logging.error(f"{error}\nTraceback: {traceback.format_exc()}")
-        send_tg_message(error)
-
+        return None
+    
 def download_file(url, local_filename):
     global calls_download_duration
 
@@ -205,7 +208,7 @@ def call_handler(call):
         text = get_text(call[1]['link'])
         if not text:
             logging.info("\t\tПроизошла ошибка при транскрибации звонка\n")
-            return
+            return None
         result = asyncio.run(get_answer(text))
 
         logging.info("\t\tВсего времени на обработку звонка: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
@@ -279,7 +282,10 @@ def main():
         result = None
         no_calls = False
 
-        if calls:
+        if calls != None:
+            if (len(calls) == 0):
+                result = "Нет звонков"
+            
             for call in calls:
                 calls_count += 1
                 call_result = call_handler(call)
@@ -291,8 +297,6 @@ def main():
                     result = "Нет интереса"
                 elif call_result == -1:
                     no_calls = True
-        else:
-            result = "Нет звонков"
 
         if result: 
             set_company_result(company, result)
