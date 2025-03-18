@@ -26,6 +26,26 @@ logging.basicConfig(
 
 logging.info("Скрипт запущен!")
 
+from supabase import create_client, Client
+
+SUPABASE_URL = "https://ovuonhjvnbvbotxmaamq.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92dW9uaGp2bmJ2Ym90eG1hYW1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIyODY5ODcsImV4cCI6MjA1Nzg2Mjk4N30.54pYR5LrPH3YGHU81jAO3dnVhu3IhHgcaBHqOhcoksM"
+
+# Создаем клиент Supabase
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+print("Успешное подключение к Supabase!")
+
+def write_to_db(company_id, call_id, text, result = None):
+    data = {
+        "company_id": company_id,
+        "call_id": call_id,
+        "text": text,
+        "result": result
+    }
+
+    response = supabase.table("calls").insert(data).execute()
+    logging.info(f"Успешная запись в supabase")
+
 script_start_time = 0
 companys_count = 0
 calls_count = 0
@@ -156,7 +176,7 @@ def get_text(file_url):
         error = f"Произошла ошибка при транскрибации: {e}"
         logging.error(f"\t\t{error}\n")
 
-async def get_answer(text):
+async def get_answer(company_id, call_id, text):
     global calls_handler_duration
 
     start_time = time.time()
@@ -166,6 +186,7 @@ async def get_answer(text):
             # response_detail = await chat.ask_question(f"{prompt}\nРасшифровка звонка:\n{text}")
             # response_strong = await chat.ask_question(f"Вот результат обработки разговора:\n{response_detail}\n{response_prompt}\n")
             response = await chat.ask_question(f"{prompt}\nРасшифровка звонка:\n{text}")
+            write_to_db(company_id, call_id, text, response)
 
             end_time = time.time()
             duration = end_time - start_time
@@ -178,12 +199,13 @@ async def get_answer(text):
 
             return response
     except Exception as e:
+        write_to_db(company_id, call_id, text)
         error = f"Произошла ошибка при обработке ИИ(кол-во символов в запросе = {len(text)}): {e}"
         logging.error(f"\t\t{error}\n")
         # send_tg_message(error)
         return None
 
-def call_handler(call):
+def call_handler(company_id, call):
     global calls_duration
     global calls_duration_no_handled
     global calls_duration_handled
@@ -209,7 +231,7 @@ def call_handler(call):
         if not text:
             logging.info("\t\tПроизошла ошибка при транскрибации звонка\n")
             return None
-        result = asyncio.run(get_answer(text))
+        result = asyncio.run(get_answer(company_id, call[1]['call_id'], text))
 
         logging.info("\t\tВсего времени на обработку звонка: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
         calls_count_handled += 1
@@ -264,7 +286,9 @@ def print_stats():
     logging.info(f"Коэффициент скорости обработки звонков(общее время): {(calls_duration_handled/script_duration).__round__(2)}")
     logging.info(f"Коэффициент скорости обработки звонков(транскрибация): {(calls_duration_handled/transcrib_duration).__round__(2)}")
     
+
 def main():
+    
     global companys_count
     global calls_count
     global script_start_time
@@ -288,7 +312,7 @@ def main():
             
             for call in calls:
                 calls_count += 1
-                call_result = call_handler(call)
+                call_result = call_handler(company['id'], call)
 
                 if call_result == "ДА":
                     result = "Есть интерес"
