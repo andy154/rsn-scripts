@@ -118,7 +118,7 @@ def download_file(url, local_filename):
             for chunk in response.iter_content(chunk_size=8192):
                 file.write(chunk)
         download_duration = time.time() - start_time
-        calls_download_duration += download_duration
+        calls_download_duration += int(download_duration)
         logging.info("\t\tВремя загрузки: " + str(download_duration.__round__(2)) + " сек.\n")
 
         return local_filename
@@ -166,7 +166,7 @@ async def get_answer(text):
 
             end_time = time.time()
             duration = end_time - start_time
-            calls_handler_duration += duration
+            calls_handler_duration += int(duration)
 
             # logging.info(f"\t\tРезультат обработки разговора: {response_detail}")
             # logging.info("\t\tРЕЗУЛЬТАТ: " + str(response_strong))
@@ -190,7 +190,7 @@ def call_handler(call):
 
     start_time = time.time()
     duration = call[1]['duration']
-    calls_duration += duration
+    calls_duration += int(duration)
     
     logging.info("\tОбработка звонка")
     logging.info("\tДлительность: " + str(duration) + " сек.")
@@ -199,7 +199,7 @@ def call_handler(call):
     if duration > config['yes_duration']:
         logging.info(f"\t\tПродолжительность звонка более {config['yes_duration']} сек., по этому в качестве результата принимаем, что есть интерес")
         calls_count_duration_yes += 1
-        calls_duration_no_handled += duration
+        calls_duration_no_handled += int(duration)
         return "ДА"
     elif call[1]['link']:    
         text = get_text(call[1]['link'])
@@ -210,7 +210,7 @@ def call_handler(call):
 
         logging.info("\t\tВсего времени на обработку звонка: " + str((time.time() - start_time).__round__(2)) + " сек.\n")
         calls_count_handled += 1
-        calls_duration_handled += duration
+        calls_duration_handled += int(duration)
         return result
     else:
         calls_count_no_results += 1

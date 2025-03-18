@@ -80,7 +80,7 @@ prompt: |
 
 
 yes_duration: 300
-company_counts_limit: 1
+company_counts_limit: 50
 
 transcrib_model: medium
 fp16: false
