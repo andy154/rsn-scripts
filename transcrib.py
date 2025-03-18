@@ -285,6 +285,13 @@ def print_stats():
 
     logging.info(f"Коэффициент скорости обработки звонков(общее время): {(calls_duration_handled/script_duration).__round__(2)}")
     logging.info(f"Коэффициент скорости обработки звонков(транскрибация): {(calls_duration_handled/transcrib_duration).__round__(2)}")
+
+    send_tg_message(f"""
+    Скрипт успешно завершил работу!
+    Время работы скрипта: {str(script_duration.__round__(2))} сек.
+    Коэффициент скорости обработки звонков(общее время): {(calls_duration_handled/script_duration).__round__(2)}
+    Коэффициент скорости обработки звонков(транскрибация): {(calls_duration_handled/transcrib_duration).__round__(2)}
+""")
     
 
 def main():
