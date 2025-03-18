@@ -44,4 +44,4 @@ models/
 *.bak
 *.orig
 
-.yaml
+*.yaml
