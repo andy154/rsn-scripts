@@ -76,7 +76,7 @@ model = whisper.load_model(config["transcrib_model"], device=config["device"])
 @limits(calls=7, period=1)
 def call_api(url):
     try:
-        response = requests.get(url, timeout=10)  # Добавляем таймаут в 10 секунд
+        response = requests.get(url, timeout=60)  # Добавляем таймаут в 10 секунд
         return response
     except requests.exceptions.Timeout:
         logging.error(f"Таймаут запроса: {url}")
