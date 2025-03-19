@@ -1,8 +1,4 @@
-whisper
-requests
-PyYAML
+openai-whisper
+https://github.com/mrgick/duckduckgo-chat-ai/archive/master.zip
 ratelimit
-duck_chat
-torch
-torchaudio
-numpy
+mysql-connector-python

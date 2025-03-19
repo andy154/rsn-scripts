@@ -1,5 +1,4 @@
 import whisper
-import torch
 import asyncio
 import time
 import os
