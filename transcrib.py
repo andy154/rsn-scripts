@@ -214,7 +214,7 @@ def call_handler(company_id, call):
     global calls_count_no_results
 
     start_time = time.time()
-    duration = int(call[1]['duration'])
+    duration = int(call[1]['duration']) if call[1]['duration'] is not None else 0
     calls_duration += duration
     
     logging.info("\tОбработка звонка")

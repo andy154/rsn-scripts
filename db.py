@@ -1,17 +1,19 @@
-from supabase import create_client, Client
+import mysql.connector
 
-SUPABASE_URL = "https://ovuonhjvnbvbotxmaamq.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92dW9uaGp2bmJ2Ym90eG1hYW1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIyODY5ODcsImV4cCI6MjA1Nzg2Mjk4N30.54pYR5LrPH3YGHU81jAO3dnVhu3IhHgcaBHqOhcoksM"
+# Параметры подключения
+conn = mysql.connector.connect(
+    host="vip139.hosting.reg.ru",      # Адрес сервера (или IP)
+    user="u0966977_amo",           # Имя пользователя MySQL
+    password="nI1hL5cM9jnC5sT5",   # Пароль от MySQL
+    database="u0966977_amo"     # Название базы данных
+)
 
-# Создаем клиент Supabase
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-print("Успешное подключение к Supabase!")
+# Создаём курсор для выполнения запросов
+cursor = conn.cursor()
+print("Подключение успешно!")
 
-data = {
-    "company_id": 123123123,
-    "call_id": 456456456,
-    "text": "qweqweqwe"
-}
+# sql = "INSERT INTO calls (text, result) VALUES (%s, %s)"
+# values = ("Alice", 25)
+# cursor.execute(sql, values)
+# conn.commit()  # Фиксируем изменения
 
-response = supabase.table("calls").insert(data).execute()
-print(response)
