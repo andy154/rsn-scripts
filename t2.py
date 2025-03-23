@@ -15,7 +15,7 @@ download_file("https://amocrm.mango-office.ru/calls/recording/download/11020017/
 batch_size = 16 # reduce if low on GPU mem
 compute_type = "float16" # change to "int8" if low on GPU mem (may reduce accuracy)
 
-model = whisperx.load_model("large-v2", device, language="ru", compute_type=compute_type)
+model = whisperx.load_model("large-v3", device, language="ru", compute_type=compute_type)
 
 audio = whisperx.load_audio(audio_file)
 result = model.transcribe(audio, batch_size=batch_size)
