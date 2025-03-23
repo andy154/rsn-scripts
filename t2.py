@@ -11,7 +11,7 @@ def download_file(url, local_filename):
 
 device = "cuda" 
 audio_file = "audio.mp3"
-download_file("https://amocrm.mango-office.ru/calls/recording/download/11020017/MToxMDE1MDk4NDoxOTk0NDA3ODQ3Njow/NDAzNzc0MjYx?userId=845211&accountId=11020017", audio_file)
+download_file("https://amocrm.mango-office.ru/calls/recording/download/11020017/MToxMDE1MDk4NDoxODk2MDE2NzY2MTow/NDAzNjI3OTY1", audio_file)
 batch_size = 16 # reduce if low on GPU mem
 compute_type = "float16" # change to "int8" if low on GPU mem (may reduce accuracy)
 
@@ -20,4 +20,4 @@ model = whisperx.load_model("large-v2", device, language="ru", compute_type=comp
 audio = whisperx.load_audio(audio_file)
 result = model.transcribe(audio, batch_size=batch_size)
 text = result["segments"][0]["text"]
-print(text)
+print(result)
