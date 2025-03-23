@@ -40,8 +40,8 @@ cursor = conn.cursor()
 logging.info("Подключение к базе данных успешно!")
 
 def write_to_db(company_id, call_id, call_link, call_duration, text, result = ""):
-    sql = "INSERT INTO calls (company_id, call_id, link, duration, text, result) VALUES (%s, %s, %s, %s, %s, %s)"
-    values = (company_id, call_id, call_link, call_duration,  text, result)
+    sql = "INSERT INTO calls (company_id, call_id, link, duration, text, result, model) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    values = (company_id, call_id, call_link, call_duration,  text, result, "whisperX_large_v2")
     cursor.execute(sql, values)
     conn.commit()  # Фиксируем изменения
     logging.info("Данные успешно записаны в БД")
