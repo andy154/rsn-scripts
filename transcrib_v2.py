@@ -25,27 +25,6 @@ logging.basicConfig(
 
 logging.info("Скрипт запущен!")
 
-import mysql.connector
-
-# Параметры подключения
-conn = mysql.connector.connect(
-    host="vip139.hosting.reg.ru",      # Адрес сервера (или IP)
-    user="u0966977_amo",           # Имя пользователя MySQL
-    password="nI1hL5cM9jnC5sT5",   # Пароль от MySQL
-    database="u0966977_amo"     # Название базы данных
-)
-
-# Создаём курсор для выполнения запросов
-cursor = conn.cursor()
-logging.info("Подключение к базе данных успешно!")
-
-def write_to_db(company_id, call_id, call_link, call_duration, text, result = ""):
-    sql = "INSERT INTO calls (company_id, call_id, link, duration, text, result, model) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    values = (company_id, call_id, call_link, call_duration,  text, result, "whisperX_large_v2")
-    cursor.execute(sql, values)
-    conn.commit()  # Фиксируем изменения
-    logging.info("Данные успешно записаны в БД")
-
 script_start_time = 0
 companys_count = 0
 calls_count = 0
@@ -69,7 +48,30 @@ prompt = config["prompt"]
 response_prompt = '\nДАЙ ОТВЕТ ОПРЕДЕЛЕННО ТОЛЬКО "ДА" или "НЕТ", НИКАКИХ ОБЪЯСНЕНИЙ!!! ТОЛЬКО "ДА" ИЛИ "НЕТ"!!!'
 
 logging.info("Загрузка whisper...")
-model = whisperx.load_model("large-v2", device="cuda", language="ru", compute_type="float16")
+whisper_version = "whisperX"
+whisper_model = "large-v3"
+model = whisperx.load_model(whisper_model, device="cuda", language="ru", compute_type="float16")
+
+import mysql.connector
+
+# Параметры подключения
+conn = mysql.connector.connect(
+    host="vip139.hosting.reg.ru",      # Адрес сервера (или IP)
+    user="u0966977_amo",           # Имя пользователя MySQL
+    password="nI1hL5cM9jnC5sT5",   # Пароль от MySQL
+    database="u0966977_amo"     # Название базы данных
+)
+
+# Создаём курсор для выполнения запросов
+cursor = conn.cursor()
+logging.info("Подключение к базе данных успешно!")
+
+def write_to_db(company_id, call_id, call_link, call_duration, text, result = ""):
+    sql = "INSERT INTO calls (company_id, call_id, link, duration, text, result, model) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    values = (company_id, call_id, call_link, call_duration,  text, result, f"{whisper_version}_{whisper_model}")
+    cursor.execute(sql, values)
+    conn.commit()  # Фиксируем изменения
+    logging.info("Данные успешно записаны в БД")
 
 @sleep_and_retry
 @limits(calls=7, period=1)
@@ -163,7 +165,9 @@ def get_text(file_url):
         batch_size = 16
         audio = whisperx.load_audio(local_filename)
         result = model.transcribe(audio, batch_size=batch_size)
-        text = result["segments"][0]["text"]
+        text = ""
+        for segment in result["segments"]:
+            text += segment["text"]
 
         os.remove(local_filename)  # Удаляем временный файл после обработки
 
