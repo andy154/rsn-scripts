@@ -18,7 +18,7 @@ logging.basicConfig(
     level=logging.INFO,  # Уровень логов
     format="%(asctime)s [%(levelname)s] %(message)s",  # Формат сообщений
     handlers=[
-        logging.FileHandler(logging_file, encoding="utf-8"),  # Логи в файл
+        # logging.FileHandler(logging_file, encoding="utf-8"),  # Логи в файл
         logging.StreamHandler()  # Логи в консоль
     ]
 )
