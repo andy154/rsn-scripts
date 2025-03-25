@@ -80,8 +80,8 @@ prompt: |
 
 
 yes_duration: 300
-company_counts_limit: 1
+company_counts_limit: all
 
 transcrib_model: medium
-fp16: false
-device: cpu
+fp16: true
+device: cuda
