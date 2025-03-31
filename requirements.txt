@@ -2,3 +2,5 @@ openai-whisper
 https://github.com/mrgick/duckduckgo-chat-ai/archive/master.zip
 ratelimit
 mysql-connector-python
+
+openai
