@@ -94,3 +94,5 @@ db_host: vip139.hosting.reg.ru
 db_user: u0966977_amo
 db_password: nI1hL5cM9jnC5sT5
 db_name: u0966977_amo
+
+openai_api_key: api_key
